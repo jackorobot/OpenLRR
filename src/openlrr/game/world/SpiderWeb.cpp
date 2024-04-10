@@ -191,7 +191,7 @@ bool32 __cdecl LegoRR::SpiderWeb_LiveObjectCallback(LegoObject* liveObj, real32*
 		return FALSE;
 	}
 
-	// Process objects caught in web
+	// Process objects already caught in web
 	if (hasFlagValue(liveObj->flags1, LiveFlags1::LIVEOBJ1_CAUGHTINWEB))
 	{
 		// If the SpiderWeb is active, we damage it
@@ -216,7 +216,9 @@ bool32 __cdecl LegoRR::SpiderWeb_LiveObjectCallback(LegoObject* liveObj, real32*
 		return FALSE;
 	}
 
-	// Nothing to process
+	// Check whether the object collides with a spider web and make it caught
+	SpiderWeb_CheckCollision(liveObj);
+
 	return FALSE;
 }
 
