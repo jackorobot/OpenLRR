@@ -105,8 +105,8 @@ bool32 __cdecl LegoRR::SpiderWeb_GetAngle(sint32 bx, sint32 by, OUT real32* thet
 		return FALSE;
 	}
 
-	// If there are walls in x direction, return 90 degrees rotation (PI/2)
-	if (hasFlagValue(blockValue(spiderwebGlobs.level, bx + 1, by).flags1, BlockFlags1::BLOCK1_WALL) ||
+	// If there are walls in both x direction, return 90 degrees rotation (PI/2)
+	if (hasFlagValue(blockValue(spiderwebGlobs.level, bx + 1, by).flags1, BlockFlags1::BLOCK1_WALL) &&
 		hasFlagValue(blockValue(spiderwebGlobs.level, bx - 1, by).flags1, BlockFlags1::BLOCK1_WALL))
 	{
 		if (theta != nullptr)
@@ -116,8 +116,8 @@ bool32 __cdecl LegoRR::SpiderWeb_GetAngle(sint32 bx, sint32 by, OUT real32* thet
 		return TRUE;
 	}
 
-	// If there are walls in y direction, return 0 degrees rotation
-	if (hasFlagValue(blockValue(spiderwebGlobs.level, bx, by + 1).flags1, BlockFlags1::BLOCK1_WALL) ||
+	// If there are walls in both y direction, return 0 degrees rotation
+	if (hasFlagValue(blockValue(spiderwebGlobs.level, bx, by + 1).flags1, BlockFlags1::BLOCK1_WALL) &&
 		hasFlagValue(blockValue(spiderwebGlobs.level, bx, by - 1).flags1, BlockFlags1::BLOCK1_WALL))
 	{
 		if (theta != nullptr)
@@ -127,7 +127,7 @@ bool32 __cdecl LegoRR::SpiderWeb_GetAngle(sint32 bx, sint32 by, OUT real32* thet
 		return TRUE;
 	}
 
-	// No walls, so cannot determine angle
+	// No adjecent walls, so cannot determine angle
 	return FALSE;
 }
 
