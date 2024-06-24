@@ -1415,16 +1415,180 @@ void __cdecl LegoRR::Reward_GotoAdvance(void)
 }
 
 // <LegoRR.exe @00462650>
-//void __cdecl LegoRR::Reward_HandleDebugKeys(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer);
+void __cdecl LegoRR::Reward_HandleDebugKeys(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer)
+{
+	Lego_Level* level = Lego_GetLevel();
+	if (level == nullptr)
+	{
+		return;
+	}
+
+	RewardLevel* reward = GetRewardLevel2(level->unused_rewardID);
+	if (reward == nullptr)
+	{
+		return;
+	}
+
+	if (!(legoGlobs.flags2 & GameFlags2::GAME2_ALLOWDEBUGKEYS))
+	{
+		return;
+	}
+
+	// If Spacebar is down and escape is pressed, terminate the program
+	if (Input_IsKeyDown(DIK_SPACE) && Input_IsKeyPressed(DIK_ESCAPE))
+	{
+		Lego_Exit();
+	}
+
+	// If key R is pressed, restart the reward showcase from the beginning
+	if (Input_IsKeyPressed(DIK_R))
+	{
+		*rewardType = Reward_Type::Reward_Crystals;
+		*state = RewardUIState::REWARDSTATE_0;
+		*timer = rewardGlobs.timer;
+		*finished = FALSE;
+		Gods98::Sound3D_StopSound(SFX_ID::SFX_MusicLoop);
+		SFX_AddToQueue(SFX_ID::SFX_MusicLoop, Gods98::SoundMode::Loop);
+		for (RewardLevelItem& item : reward->items)
+		{
+			Reward_PlayFlic(&item);
+		}
+	}
+}
 
 // <LegoRR.exe @00462720>
-//void __cdecl LegoRR::Reward_PlayFlic(RewardLevelItem* rewardItem);
+void __cdecl LegoRR::Reward_PlayFlic(RewardLevelItem* rewardItem)
+{
+	if (rewardItem->flags & RewardItemFlags::REWARDITEM_FLAG_FLIC)
+	{
+		Gods98::Flic_Close(rewardItem->Flic);
+		Gods98::Flic_Setup(rewardItem->FlicName, &rewardItem->Flic, Gods98::FlicUserFlags::FLICDISK);
+	}
+}
 
 // <LegoRR.exe @00462760>
-//void __cdecl LegoRR::Reward_UpdateState(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer);
+void __cdecl LegoRR::Reward_UpdateState(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer)
+{
+	Lego_Level* level = Lego_GetLevel();
+	if (level == nullptr)
+	{
+		return;
+	}
+
+	RewardLevel* reward = GetRewardLevel2(level->unused_rewardID);
+	if (reward == nullptr)
+	{
+		return;
+	}
+
+	bool progressState = false;
+
+	if (rewardGlobs.timer <= *timer && *state == REWARDSTATE_0) {
+		progressState = true;
+	}
+
+	if ((*state != REWARDSTATE_0)
+		&& ((rewardGlobs.timer * 2) <= *timer)
+		&& (Lego_GetLevel()->status == LevelStatus::LEVELSTATUS_COMPLETE)
+		&& (*rewardType < Reward_Type::Reward_Type_Count))
+	{
+		progressState = true;
+	}
+
+	if (!progressState)
+	{
+		return;
+	}
+
+	*timer -= rewardGlobs.timer;
+
+	sint32 rewardTypeInt = *rewardType;
+	if (rewardTypeInt < Reward_Type::Reward_Type_Count)
+	{
+		++rewardTypeInt;
+	}
+	*rewardType = static_cast<Reward_Type>(rewardTypeInt);
+
+	char const* const sfxName = reward->items[rewardTypeInt - 1].SoundName;
+	SFX_ID sfxType;
+	if (sfxName != nullptr && SFX_GetType(sfxName, &sfxType))
+	{
+		SFX_AddToQueue(sfxType, Gods98::SoundMode::Once);
+	}
+
+	if (*rewardType >= Reward_Type::Reward_Type_Count)
+	{
+		if (*state == RewardUIState::REWARDSTATE_0)
+		{
+			*rewardType = Reward_Type::Reward_Score;
+			sint32 stateInt = static_cast<sint32>(*state);
+			*state = static_cast<RewardUIState>(stateInt + 1);
+			return;
+		}
+
+		if ((*rewardType >= Reward_Type::Reward_Type_Count) && (*state >= RewardUIState::REWARDSTATE_1))
+		{
+			if (Reward_Type::Reward_Type_Count < *rewardType)
+			{
+				*rewardType = Reward_Type::Reward_Type_Count;
+				sint32 stateInt = static_cast<sint32>(*state);
+				*state = static_cast<RewardUIState>(stateInt + 1);
+			}
+
+			for (auto& item : reward->items)
+			{
+				Reward_PlayFlic(&item);
+			}
+		}
+	}
+}
 
 // <LegoRR.exe @004628c0>
-//void __cdecl LegoRR::Reward_DrawAllValues(IN Reward_Type* rewardType, OUT bool32* finished);
+void __cdecl LegoRR::Reward_DrawAllValues(IN Reward_Type* rewardType, OUT bool32* finished)
+{
+	Lego_Level* level = Lego_GetLevel();
+	if (level == nullptr)
+	{
+		return;
+	}
+
+	RewardLevel* reward = GetRewardLevel2(level->unused_rewardID);
+	if (reward == nullptr)
+	{
+		return;
+	}
+
+	if (((*rewardType == Reward_Type::Reward_Type_Count)
+		 || (level->status != LevelStatus::LEVELSTATUS_COMPLETE
+			 && (*rewardType == Reward_Type::Reward_Score)))
+		&& (reward->items[Reward_Type::Reward_Score].Flic == nullptr
+			|| rewardGlobs.displayFlics == 0
+			|| reward->items[Reward_Type::Reward_Score].Flic->currentframe >= 33
+			|| level->status != LevelStatus::LEVELSTATUS_COMPLETE))
+	{
+		*finished = TRUE;
+	}
+
+	for (sint32 idx = 0; idx < Reward_Type::Reward_Type_Count; ++idx)
+	{
+		sint32 rewardTypeInt = static_cast<sint32>(*rewardType);
+		if (rewardTypeInt >= Reward_Type::Reward_Type_Count)
+		{
+			rewardTypeInt = Reward_Type::Reward_Score;
+		}
+
+		if (rewardTypeInt <= idx)
+		{
+			break;
+		}
+
+		Reward_DrawItem(&reward->items[idx], RewardItemFlags::REWARDITEM_FLAG_VALUETEXT, *rewardType);
+	}
+
+	// These calls server no purpose
+	Gods98::Font_GetStringWidth(rewardGlobs.titleFont, level->FullName);
+	Gods98::Font_GetStringWidth(rewardGlobs.titleFont, rewardGlobs.statusMessage);
+}
 
 // <LegoRR.exe @004629c0>
 void __cdecl LegoRR::Reward_LoopUpdate(real32 elapsedSeconds)
@@ -1449,48 +1613,272 @@ void __cdecl LegoRR::Reward_LoopUpdate(real32 elapsedSeconds)
 }
 
 // <LegoRR.exe @00462a40>
-//bool32 __cdecl LegoRR::Reward_LoopBegin(void);
+bool32 __cdecl LegoRR::Reward_LoopBegin(void)
+{
+	Lego_Level* level = Lego_GetLevel();
+	if (level == nullptr)
+	{
+		return FALSE;
+	}
+
+	RewardLevel* reward = GetRewardLevel2(level->unused_rewardID);
+	if (reward == nullptr)
+	{
+		return FALSE;
+	}
+
+	if (rewardGlobs.display && reward->Enabled)
+	{
+		while (Input_IsKeyUp(DIK_SPACE) && !Input_IsKeyReleased(DIK_SPACE))
+		{
+			Gods98::Main_LoopUpdate(TRUE);
+		}
+		Gods98::INPUT.lClicked = FALSE;
+		SFX_AddToQueue(SFX_ID::SFX_MusicLoop, Gods98::SoundMode::Loop);
+		return TRUE;
+	}
+
+	Reward_GotoAdvance();
+	return FALSE;
+}
 
 // <LegoRR.exe @00462ac0>
-//void __cdecl LegoRR::RewardQuota_UpdateTimers(real32 elapsedGame);
+void __cdecl LegoRR::RewardQuota_UpdateTimers(real32 elapsedGame)
+{
+	RewardLevelItem& timer = rewardGlobs.current.items[Reward_Type::Reward_Timer];
+	timer.countdown += 1.0f;
+	timer.countdownRatio += elapsedGame;
+}
 
 // <LegoRR.exe @00462af0>
-//void __cdecl LegoRR::RewardQuota_WallDestroyed(void);
+void __cdecl LegoRR::RewardQuota_WallDestroyed(void)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_Timer].countdown += 1.0f;
+}
 
 // <LegoRR.exe @00462b10>
-//void __cdecl LegoRR::RewardQuota_CavernDiscovered(void);
+void __cdecl LegoRR::RewardQuota_CavernDiscovered(void)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_Caverns].countdown += 1.0f;
+}
 
 // <LegoRR.exe @00462b30>
-//void __cdecl LegoRR::RewardQuota_RockMonsterGenerated(void);
+void __cdecl LegoRR::RewardQuota_RockMonsterGenerated(void)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numGenerated += 1;
+}
 
 // <LegoRR.exe @00462b40>
-//void __cdecl LegoRR::RewardQuota_RockMonsterDestroyed(void);
+void __cdecl LegoRR::RewardQuota_RockMonsterDestroyed(void)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numDestroyed += 1;
+}
 
 // <LegoRR.exe @00462b50>
-//void __cdecl LegoRR::RewardQuota_RockMonsterAttacked(void);
+void __cdecl LegoRR::RewardQuota_RockMonsterAttacked(void)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numAttacked += 1;
+}
 
 // <LegoRR.exe @00462b60>
-//void __cdecl LegoRR::RewardQuota_RockMonsterDamageDealt(real32 damage);
+void __cdecl LegoRR::RewardQuota_RockMonsterDamageDealt(real32 damage)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].damageTaken += damage;
+}
 
 // <LegoRR.exe @00462b80>
-//void __cdecl LegoRR::RewardQuota_MiniFigureDamageTaken(real32 damage);
+void __cdecl LegoRR::RewardQuota_MiniFigureDamageTaken(real32 damage)
+{
+	rewardGlobs.current.items[Reward_Type::Reward_Figures].damageTaken += damage;
+}
 
 // <LegoRR.exe @00462ba0>
-//LegoRR::RewardScroll* __cdecl LegoRR::RewardScroll_Create(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed);
+LegoRR::RewardScroll* __cdecl LegoRR::RewardScroll_Create(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed)
+{
+	RewardScroll* front = reinterpret_cast<RewardScroll*>(Gods98::Mem_Alloc(sizeof(RewardScroll)));
+
+	if (front != nullptr)
+	{
+		std::memset(front, 0, sizeof(RewardScroll));
+		front->labels = reinterpret_cast<RewardScrollLabel**>(Gods98::Mem_Alloc(sizeof(RewardScrollLabel*)));
+		*front->labels = reinterpret_cast<RewardScrollLabel*>(Gods98::Mem_Alloc(sizeof(RewardScrollLabel)));
+		std::memset(front->labels[0], 0, sizeof(RewardScrollLabel));
+
+		front->scrollSpeed = scrollSpeed;
+		front->xPos = zero;
+		front->yPos = heightDiv20;
+		front->width = width;
+		front->height = bottomSubDiv3pt5;
+		front->yInitial = heightDiv20;
+	}
+
+	*scroll = front;
+	return front;
+}
 
 // <LegoRR.exe @00462c20>
-//bool32 __cdecl LegoRR::RewardScroll_Free(IN OUT RewardScroll** scroll);
+bool32 __cdecl LegoRR::RewardScroll_Free(IN OUT RewardScroll** scroll)
+{
+	RewardScroll* scroll_ptr = *scroll;
+	if (scroll_ptr->labelCount != 0)
+	{
+		for (uint32 idx = 0; idx < scroll_ptr->labelCount; ++idx)
+		{
+			RewardScrollLabel* label = scroll_ptr->labels[idx];
+			if (label->text != nullptr)
+			{
+				Gods98::Mem_Free(label->text);
+			}
+			Gods98::Mem_Free(label);
+		}
+	}
+
+	if (scroll_ptr->labels != nullptr)
+	{
+		Gods98::Mem_Free(scroll_ptr->labels);
+	}
+
+	Gods98::Mem_Free(scroll_ptr);
+	return TRUE;
+}
 
 // <LegoRR.exe @00462c90>
-//LegoRR::RewardScrollLabel* __cdecl LegoRR::RewardScroll_AddLabel(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags);
+LegoRR::RewardScrollLabel* __cdecl LegoRR::RewardScroll_AddLabel(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags)
+{
+	if (font == nullptr)
+	{
+		return nullptr;
+	}
+
+	int const idx = scroll->labelCount;
+	scroll->labelCount = idx + 1;
+
+	scroll->labels = reinterpret_cast<RewardScrollLabel**>(
+		Gods98::Mem_ReAlloc(scroll->labels, scroll->labelCount * sizeof(RewardScrollLabel*)));
+	RewardScrollLabel* label = reinterpret_cast<RewardScrollLabel*>(Gods98::Mem_Alloc(sizeof(RewardScrollLabel)));
+	scroll->labels[idx] = label;
+	std::memset(label, 0, sizeof(RewardScrollLabel));
+
+	label->xPos = xPos;
+	label->yPos = yPos;
+
+	std::size_t const text_length = std::strlen(text);
+	label->text = reinterpret_cast<char*>(Gods98::Mem_Alloc(text_length));
+	std::sprintf(label->text, "%s", text);
+
+	label->mode = RewardScrollLabelMode::REWARDSCROLL_MODE_TEXT;
+	label->font = font;
+	label->flags |= labelFlags;
+
+	return label;
+}
 
 // <LegoRR.exe @00462d70>
-//void __cdecl LegoRR::RewardScroll_SetDelay_Unk(RewardScroll* scroll, real32 curScrollY);
+void __cdecl LegoRR::RewardScroll_SetDelay_Unk(RewardScroll* scroll, real32 curScrollY)
+{
+	scroll->curScrollY = curScrollY;
+}
 
 // <LegoRR.exe @00462d80>
-//void __cdecl LegoRR::RewardScroll_AddFlags(RewardScroll* scroll, RewardScrollFlags flags);
+void __cdecl LegoRR::RewardScroll_AddFlags(RewardScroll* scroll, RewardScrollFlags flags)
+{
+	scroll->flags |= flags;
+}
 
 // <LegoRR.exe @00462d90>
-//bool32 __cdecl LegoRR::RewardScroll_DrawLabels(RewardScroll* scroll);
+bool32 __cdecl LegoRR::RewardScroll_DrawLabels(RewardScroll* scroll)
+{
+	for (uint32 idx = 0; idx < scroll->labelCount; ++idx)
+	{
+		RewardScrollLabel* label = scroll->labels[idx];
+
+		int textXPos = static_cast<int>(label->xPos + scroll->xPos);
+		int textYPos = static_cast<int>(label->yPos + scroll->yPos);
+		if (scroll->flags & RewardScrollFlags::REWARDSCROLL_UNK_1)
+		{
+			while (textYPos < scroll->yInitial)
+			{
+				int const yOffset = static_cast<int>(scroll->curScrollY + scroll->height);
+				textYPos += yOffset;
+			}
+
+			float const scrollHeight = scroll->curScrollY + scroll->yInitial + scroll->height;
+			while (scrollHeight < textYPos)
+			{
+				textYPos -= static_cast<int>(scroll->height);
+			}
+		}
+
+		switch (label->mode)
+		{
+		case RewardScrollLabelMode::REWARDSCROLL_MODE_WINDOW:
+			Gods98::TextWindow_ChangePosition(label->textWnd, textXPos, textYPos);
+			Gods98::TextWindow_Update(label->textWnd, 0, Gods98::mainGlobs.fixedFrameTiming, nullptr);
+			// Fallthrough
+
+		case RewardScrollLabelMode::REWARDSCROLL_MODE_IMAGE:
+			Point2F destPos, destSize;
+			destPos.x = static_cast<float>(textXPos);
+			destPos.y = static_cast<float>(textYPos);
+			destSize.x = static_cast<float>(label->image->width);
+			destSize.y = static_cast<float>(label->image->height);
+			Gods98::Image_DisplayScaled(label->image, nullptr, &destPos, &destSize);
+			// Fallthrough
+
+		case RewardScrollLabelMode::REWARDSCROLL_MODE_TEXT:
+			if (label->flags & RewardScrollLabelFlags::REWARDSCROLL_LABEL_CENTERED)
+			{
+				textXPos += (static_cast<int>((scroll->width - scroll->xPos) / 2.0f)
+							 - (Gods98::Font_GetStringWidth(label->font, label->text) / 2));
+			}
+
+			if (label->flags & RewardScrollLabelFlags::REWARDSCROLL_LABEL_NOSCROLL)
+			{
+				textYPos = static_cast<int>(label->yPos);
+			}
+
+			if (label->flags & RewardScrollLabelFlags::REWARDSCROLL_LABEL_NOSCROLL
+				|| (textYPos < (scroll->height + scroll->yInitial) && scroll->yInitial < textYPos))
+			{
+				Gods98::Font_PrintF(label->font, textXPos, textYPos, label->text);
+			}
+		}
+	}
+
+	scroll->yPos -= scroll->scrollSpeed;
+
+	if (legoGlobs.flags2 & GameFlags2::GAME2_ALLOWDEBUGKEYS)
+	{
+		if (Input_IsKeyDown(DIK_S))
+		{
+			scroll->scrollSpeed = 0.0f;
+		}
+
+		if (Input_IsKeyDown(DIK_R))
+		{
+			scroll->yPos = scroll->yInitial;
+		}
+
+		if (Input_IsKeyDown(DIK_EQUALS))
+		{
+			scroll->scrollSpeed += 0.01f;
+		}
+
+		if (Input_IsKeyDown(DIK_MINUS))
+		{
+			scroll->scrollSpeed -= 0.01f;
+		}
+
+		for (int key = 0; key < 10; ++key)
+		{
+			if (Input_IsKeyDown(DIK_1 + key))
+			{
+				scroll->scrollSpeed = (key + 1) * 0.1f;
+			}
+		}
+	}
+
+	return true;
+}
 
 #pragma endregion

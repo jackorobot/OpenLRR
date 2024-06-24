@@ -395,84 +395,84 @@ void __cdecl Reward_GotoSaveMenu(void);
 void __cdecl Reward_GotoAdvance(void);
 
 // <LegoRR.exe @00462650>
-#define Reward_HandleDebugKeys ((void (__cdecl* )(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer))0x00462650)
-//void __cdecl Reward_HandleDebugKeys(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer);
+//#define Reward_HandleDebugKeys ((void (__cdecl* )(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer))0x00462650)
+void __cdecl Reward_HandleDebugKeys(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT bool32* finished, IN OUT real32* timer);
 
 // <LegoRR.exe @00462720>
-#define Reward_PlayFlic ((void (__cdecl* )(RewardLevelItem* rewardItem))0x00462720)
-//void __cdecl Reward_PlayFlic(RewardLevelItem* rewardItem);
+//#define Reward_PlayFlic ((void (__cdecl* )(RewardLevelItem* rewardItem))0x00462720)
+void __cdecl Reward_PlayFlic(RewardLevelItem* rewardItem);
 
 // <LegoRR.exe @00462760>
-#define Reward_UpdateState ((void (__cdecl* )(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer))0x00462760)
-//void __cdecl Reward_UpdateState(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer);
+//#define Reward_UpdateState ((void (__cdecl* )(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer))0x00462760)
+void __cdecl Reward_UpdateState(IN OUT Reward_Type* rewardType, IN OUT RewardUIState* state, IN OUT real32* timer);
 
 // <LegoRR.exe @004628c0>
-#define Reward_DrawAllValues ((void (__cdecl* )(IN Reward_Type* rewardType, OUT bool32* finished))0x004628c0)
-//void __cdecl Reward_DrawAllValues(IN Reward_Type* rewardType, OUT bool32* finished);
+//#define Reward_DrawAllValues ((void (__cdecl* )(IN Reward_Type* rewardType, OUT bool32* finished))0x004628c0)
+void __cdecl Reward_DrawAllValues(IN Reward_Type* rewardType, OUT bool32* finished);
 
 // <LegoRR.exe @004629c0>
 //#define Reward_LoopUpdate ((void (__cdecl* )(real32 elapsedSeconds))0x004629c0)
 void __cdecl Reward_LoopUpdate(real32 elapsedSeconds);
 
 // <LegoRR.exe @00462a40>
-#define Reward_LoopBegin ((bool32 (__cdecl* )(void))0x00462a40)
-//bool32 __cdecl Reward_LoopBegin(void);
+//#define Reward_LoopBegin ((bool32 (__cdecl* )(void))0x00462a40)
+bool32 __cdecl Reward_LoopBegin(void);
 
 // <LegoRR.exe @00462ac0>
-#define RewardQuota_UpdateTimers ((void (__cdecl* )(real32 elapsedGame))0x00462ac0)
-//void __cdecl RewardQuota_UpdateTimers(real32 elapsedGame);
+//#define RewardQuota_UpdateTimers ((void (__cdecl* )(real32 elapsedGame))0x00462ac0)
+void __cdecl RewardQuota_UpdateTimers(real32 elapsedGame);
 
 // <LegoRR.exe @00462af0>
-#define RewardQuota_WallDestroyed ((void (__cdecl* )(void))0x00462af0)
-//void __cdecl RewardQuota_WallDestroyed(void);
+//#define RewardQuota_WallDestroyed ((void (__cdecl* )(void))0x00462af0)
+void __cdecl RewardQuota_WallDestroyed(void);
 
 // <LegoRR.exe @00462b10>
-#define RewardQuota_CavernDiscovered ((void (__cdecl* )(void))0x00462b10)
-//void __cdecl RewardQuota_CavernDiscovered(void);
+//#define RewardQuota_CavernDiscovered ((void (__cdecl* )(void))0x00462b10)
+void __cdecl RewardQuota_CavernDiscovered(void);
 
 // <LegoRR.exe @00462b30>
-#define RewardQuota_RockMonsterGenerated ((void (__cdecl* )(void))0x00462b30)
-//void __cdecl RewardQuota_RockMonsterGenerated(void);
+//#define RewardQuota_RockMonsterGenerated ((void (__cdecl* )(void))0x00462b30)
+void __cdecl RewardQuota_RockMonsterGenerated(void);
 
 // <LegoRR.exe @00462b40>
-#define RewardQuota_RockMonsterDestroyed ((void (__cdecl* )(void))0x00462b40)
-//void __cdecl RewardQuota_RockMonsterDestroyed(void);
+//#define RewardQuota_RockMonsterDestroyed ((void (__cdecl* )(void))0x00462b40)
+void __cdecl RewardQuota_RockMonsterDestroyed(void);
 
 // <LegoRR.exe @00462b50>
-#define RewardQuota_RockMonsterAttacked ((void (__cdecl* )(void))0x00462b50)
-//void __cdecl RewardQuota_RockMonsterAttacked(void);
+//#define RewardQuota_RockMonsterAttacked ((void (__cdecl* )(void))0x00462b50)
+void __cdecl RewardQuota_RockMonsterAttacked(void);
 
 // <LegoRR.exe @00462b60>
-#define RewardQuota_RockMonsterDamageDealt ((void (__cdecl* )(real32 damage))0x00462b60)
-//void __cdecl RewardQuota_RockMonsterDamageDealt(real32 damage);
+//#define RewardQuota_RockMonsterDamageDealt ((void (__cdecl* )(real32 damage))0x00462b60)
+void __cdecl RewardQuota_RockMonsterDamageDealt(real32 damage);
 
 // <LegoRR.exe @00462b80>
-#define RewardQuota_MiniFigureDamageTaken ((void (__cdecl* )(real32 damage))0x00462b80)
-//void __cdecl RewardQuota_MiniFigureDamageTaken(real32 damage);
+//#define RewardQuota_MiniFigureDamageTaken ((void (__cdecl* )(real32 damage))0x00462b80)
+void __cdecl RewardQuota_MiniFigureDamageTaken(real32 damage);
 
 // <LegoRR.exe @00462ba0>
-#define RewardScroll_Create ((RewardScroll* (__cdecl* )(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed))0x00462ba0)
-//RewardScroll* __cdecl RewardScroll_Create(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed);
+//#define RewardScroll_Create ((RewardScroll* (__cdecl* )(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed))0x00462ba0)
+RewardScroll* __cdecl RewardScroll_Create(OUT RewardScroll** scroll, real32 zero, real32 heightDiv20, real32 width, real32 bottomSubDiv3pt5, real32 scrollSpeed);
 
 // <LegoRR.exe @00462c20>
-#define RewardScroll_Free ((bool32 (__cdecl* )(IN OUT RewardScroll** scroll))0x00462c20)
-//bool32 __cdecl RewardScroll_Free(IN OUT RewardScroll** scroll);
+//#define RewardScroll_Free ((bool32 (__cdecl* )(IN OUT RewardScroll** scroll))0x00462c20)
+bool32 __cdecl RewardScroll_Free(IN OUT RewardScroll** scroll);
 
 // <LegoRR.exe @00462c90>
-#define RewardScroll_AddLabel ((RewardScrollLabel* (__cdecl* )(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags))0x00462c90)
-//RewardScrollLabel* __cdecl RewardScroll_AddLabel(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags);
+//#define RewardScroll_AddLabel ((RewardScrollLabel* (__cdecl* )(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags))0x00462c90)
+RewardScrollLabel* __cdecl RewardScroll_AddLabel(RewardScroll* scroll, const char* text, Gods98::Font* font, real32 xPos, real32 yPos, RewardScrollLabelFlags labelFlags);
 
 // <LegoRR.exe @00462d70>
-#define RewardScroll_SetDelay_Unk ((void (__cdecl* )(RewardScroll* scroll, real32 curScrollY))0x00462d70)
-//void __cdecl RewardScroll_SetDelay_Unk(RewardScroll* scroll, real32 curScrollY);
+//#define RewardScroll_SetDelay_Unk ((void (__cdecl* )(RewardScroll* scroll, real32 curScrollY))0x00462d70)
+void __cdecl RewardScroll_SetDelay_Unk(RewardScroll* scroll, real32 curScrollY);
 
 // <LegoRR.exe @00462d80>
-#define RewardScroll_AddFlags ((void (__cdecl* )(RewardScroll* scroll, RewardScrollFlags flags))0x00462d80)
-//void __cdecl RewardScroll_AddFlags(RewardScroll* scroll, RewardScrollFlags flags);
+//#define RewardScroll_AddFlags ((void (__cdecl* )(RewardScroll* scroll, RewardScrollFlags flags))0x00462d80)
+void __cdecl RewardScroll_AddFlags(RewardScroll* scroll, RewardScrollFlags flags);
 
 // <LegoRR.exe @00462d90>
-#define RewardScroll_DrawLabels ((bool32 (__cdecl* )(RewardScroll* scroll))0x00462d90)
-//bool32 __cdecl RewardScroll_DrawLabels(RewardScroll* scroll);
+//#define RewardScroll_DrawLabels ((bool32 (__cdecl* )(RewardScroll* scroll))0x00462d90)
+bool32 __cdecl RewardScroll_DrawLabels(RewardScroll* scroll);
 
 #pragma endregion
 
