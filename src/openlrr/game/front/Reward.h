@@ -351,8 +351,8 @@ RewardBuildingCounts* __cdecl RewardQuota_CountBuildings(OUT RewardBuildingCount
 bool32 __cdecl RewardQuota_LiveObjectCallback_CountBuildings(LegoObject* liveObj, void* search);
 
 // <LegoRR.exe @00460620>
-#define Reward_Prepare ((bool32 (__cdecl* )(void))0x00460620)
-//bool32 __cdecl Reward_Prepare(void);
+//#define Reward_Prepare ((bool32 (__cdecl* )(void))0x00460620)
+bool32 __cdecl Reward_Prepare(void);
 
 // <LegoRR.exe @00460bd0>
 //#define Reward_GetLevelObjectsBuilt ((uint32 (__cdecl* )(const char* objName, sint32 objLevel, bool32 currentLevel))0x00460bd0)

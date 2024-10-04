@@ -652,7 +652,173 @@ bool32 __cdecl LegoRR::RewardQuota_LiveObjectCallback_CountBuildings(LegoObject*
 }
 
 // <LegoRR.exe @00460620>
-//bool32 __cdecl LegoRR::Reward_Prepare(void);
+bool32 __cdecl LegoRR::Reward_Prepare(void)
+{
+	Lego_Level* level = Lego_GetLevel();
+	if (level == nullptr)
+	{
+		return FALSE;
+	}
+
+	RewardLevel* reward = GetRewardLevel2(level->unused_rewardID);
+	if (reward == nullptr)
+	{
+		return FALSE;
+	}
+
+	if (rewardGlobs.current.saveHasCapture)
+	{
+		reward->saveCaptureImage = rewardGlobs.current.saveCaptureImage;
+		reward->saveHasCapture = TRUE;
+	}
+
+	reward->items[Reward_Type::Reward_Crystals].countdownRatio = 0.0f;
+	reward->items[Reward_Type::Reward_Ore].countdownRatio = 0.0f;
+	reward->items[Reward_Type::Reward_Diggable].countdown = rewardGlobs.current.items[Reward_Type::Reward_Diggable].countdown;
+	reward->items[Reward_Type::Reward_Caverns].countdown = rewardGlobs.current.items[Reward_Type::Reward_Caverns].countdown;
+	reward->items[Reward_Type::Reward_Diggable].countdown = 0.0f;
+	reward->levelItem.countdownRatio = 0.0f;
+	reward->levelItem.countdown = 0.0f;
+	reward->items[Reward_Type::Reward_Figures].numGenerated = Reward_GetLevelObjectsBuilt("Pilot", 0, 0);
+	reward->items[Reward_Type::Reward_Figures].numDestroyed = rewardGlobs.current.items[Reward_Type::Reward_Figures].numDestroyed;
+	reward->items[Reward_Type::Reward_Figures].damageTaken = rewardGlobs.current.items[Reward_Type::Reward_Figures].damageTaken;
+	uint32 const rockMonstersGenerated = rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numGenerated;
+	reward->items[Reward_Type::Reward_RockMonsters].numGenerated = rockMonstersGenerated;
+	reward->items[Reward_Type::Reward_RockMonsters].numDestroyed = rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numDestroyed;
+	reward->items[Reward_Type::Reward_RockMonsters].damageTaken = rockMonstersGenerated * 100.0f;
+	if (rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].damageTaken <= reward->items[Reward_Type::Reward_RockMonsters].damageTaken)
+	{
+		reward->items[Reward_Type::Reward_RockMonsters].damageTaken = rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].damageTaken;
+	}
+	reward->items[Reward_Type::Reward_RockMonsters].numAttacked = rewardGlobs.current.items[Reward_Type::Reward_RockMonsters].numAttacked;
+	reward->buildingCounts = rewardGlobs.current.buildingCounts;
+	reward->field_1c8 = 0;
+	reward->items[Reward_Type::Reward_Oxygen].countdownRatio = 100;
+	reward->items[Reward_Type::Reward_Oxygen].countdown = legoGlobs.currLevel->oxygenLevel;
+	reward->items[Reward_Type::Reward_Timer].countdown = rewardGlobs.current.items[Reward_Type::Reward_Timer].countdown;
+	reward->items[Reward_Type::Reward_Timer].countdownRatio =
+		rewardGlobs.current.items[Reward_Type::Reward_Timer].countdownRatio / reward->items[Reward_Type::Reward_Timer].countdown;
+
+	Map3D& surfMap = *level->map;
+	for (uint32 bx = 0; bx < surfMap.blockWidth; ++bx)
+	{
+		for (uint32 by = 0; by < surfMap.blockHeight; ++by)
+		{
+			Lego_SurfaceType const terrain = static_cast<Lego_SurfaceType>(blockValue(level, bx, by).terrain);
+			++reward->field_1c8;
+
+			Point2I blockPos;
+			blockPos.x = bx;
+			blockPos.y = by;
+			uint32 crystalLv0 = 0, crystalLv1 = 0, oreLv0 = 0, oreLv1 = 0;
+			Lego_GetBlockCryOre(&blockPos, &crystalLv0, &crystalLv1, &oreLv0, &oreLv1);
+			reward->items[Reward_Type::Reward_Crystals].countdownRatio += crystalLv0;
+			reward->items[Reward_Type::Reward_Ore].countdownRatio += oreLv0;
+
+			if ((blockValue(level, bx, by).flags1 & BlockFlags1::BLOCK1_FLOOR) == FALSE)
+			{
+				if (terrain != Lego_SurfaceType::Lego_SurfaceType_Immovable)
+				{
+					reward->items[Reward_Type::Reward_Diggable].countdownRatio += 1.0f;
+					reward->levelItem.countdownRatio += 1.0f;
+				}
+				if (terrain == Lego_SurfaceType::Lego_SurfaceType_CrystalSeam)
+				{
+					reward->items[Reward_Type::Reward_Crystals].countdownRatio += 4.0f;
+				}
+			}
+			else if (terrain != Lego_SurfaceType::Lego_SurfaceType_Water && terrain != Lego_SurfaceType::Lego_SurfaceType_Lava)
+			{
+				reward->levelItem.countdownRatio += 1.0f;
+			}
+
+			if ((blockValue(level, bx, by).flags1 &
+				 (BlockFlags1::BLOCK1_FOUNDATION
+				  | BlockFlags1::BLOCK1_UNUSED_PATHTYPE
+				  | BlockFlags1::BLOCK1_PATH
+				  | BlockFlags1::BLOCK1_LAYEDPATH)) != BlockFlags1::BLOCK1_NONE)
+			{
+				reward->levelItem.countdown += 1.0f;
+				reward->items[Reward_Type::Reward_Diggable].countdownRatio += 1.0f;
+			}
+		}
+	}
+
+	reward->uintConstructCount_1cc = reward->buildingCounts.count;
+	reward->uintConstruct_1d0 = reward->buildingCounts.numPrevLevels_unk;
+	reward->items[Reward_Type::Reward_Ore].countdownRatio +=
+		reward->items[Reward_Type::Reward_Diggable].countdownRatio * 4.0f;
+	for (uint32 idx = 0; idx < reward->uintConstructCount_1cc; ++idx)
+	{
+		std::sprintf(reward->buildingNameBuffers[idx], "%s", reward->buildingCounts.nameTable[idx]);
+	}
+
+	reward->items[Reward_Type::Reward_Crystals].countdown = static_cast<real32>(level->crystals);
+	reward->items[Reward_Type::Reward_Ore].countdown = static_cast<real32>(level->ore);
+	reward->items[Reward_Type::Reward_Figures].countdownRatio = static_cast<real32>(reward->items[Reward_Type::Reward_Figures].numGenerated);
+	reward->items[Reward_Type::Reward_Figures].countdown = static_cast<real32>(
+		reward->items[Reward_Type::Reward_Figures].numGenerated- reward->items[Reward_Type::Reward_Figures].numDestroyed);
+	reward->items[Reward_Type::Reward_RockMonsters].countdown =	reward->items[Reward_Type::Reward_RockMonsters].damageTaken;
+	reward->items[Reward_Type::Reward_RockMonsters].countdownRatio = reward->items[Reward_Type::Reward_RockMonsters].numGenerated * 100.0f;
+	reward->items[Reward_Type::Reward_Constructions].countdownRatio = static_cast<real32>(reward->uintConstructCount_1cc);
+	reward->items[Reward_Type::Reward_Constructions].countdown = static_cast<real32>((reward->uintConstructCount_1cc - reward->uintConstruct_1d0) + 1);
+
+	sint32 quota = reward->items[Reward_Type::Reward_Timer].Quota;
+	if (quota == 0)
+	{
+		reward->items[Reward_Type::Reward_Timer].percentFloat = 0.0f;
+		quota = (reward->uintConstructCount_1cc - reward->uintConstruct_1d0) + 1;
+	}
+	else
+	{
+		real32 const scaledTimerCounterdown = reward->items[Reward_Type::Reward_Timer].countdown * 0.04f;
+		if (quota <= scaledTimerCounterdown)
+		{
+			reward->items[Reward_Type::Reward_Timer].percentFloat = 100.0f;
+		}
+		else
+		{
+			real32 const newQuota = 100.0f / quota * scaledTimerCounterdown;
+			reward->items[Reward_Type::Reward_Timer].percentFloat = std::clamp(newQuota, 0.0f, 100.0f);
+			quota = static_cast<sint32>(newQuota);
+		}
+	}
+
+	if (reward->items[Reward_Type::Reward_Constructions].Quota != 0)
+	{
+		quota = 100 / reward->items[Reward_Type::Reward_Constructions].Quota;
+		reward->items[Reward_Type::Reward_Constructions].percentFloat = quota * reward->items[Reward_Type::Reward_Constructions].countdown;
+	}
+
+	if (reward->items[Reward_Type::Reward_Caverns].Quota != 0)
+	{
+		quota = 100 / reward->items[Reward_Type::Reward_Caverns].Quota;
+		reward->items[Reward_Type::Reward_Caverns].percentFloat = quota * reward->items[Reward_Type::Reward_Caverns].countdown;
+	}
+
+	if (reward->items[Reward_Type::Reward_Crystals].Quota != 0)
+	{
+		reward->items[Reward_Type::Reward_Crystals].countdownRatio = static_cast<real32>(reward->items[Reward_Type::Reward_Crystals].Quota);
+		quota = reward->items[Reward_Type::Reward_Caverns].Quota;
+	}
+
+	for (sint32 idx = Reward_Type::Reward_Crystals; idx < Reward_Type::Reward_Type_Count; ++idx)
+	{
+		if (idx == Reward_Type::Reward_Timer)
+		{
+			continue;
+		}
+
+		reward->items[idx].percentFloat = std::clamp(reward->items[idx].percentFloat, 0.0f, 100.0f);
+	}
+
+	Reward_PrepareCalculate();
+	Reward_PrepareScroll();
+	
+	std::memset(&rewardGlobs.current, 0, sizeof(rewardGlobs.current));
+
+	return TRUE;
+}
 
 // <LegoRR.exe @00460bd0>
 uint32 __cdecl LegoRR::Reward_GetLevelObjectsBuilt(const char* objName, sint32 objLevel, bool32 currentLevel)

@@ -866,7 +866,7 @@ bool interop_hook_Gods98_Flic(void)
 	// internal, no need to hook these
 	//result &= hook_write_jmpret(0x00484220, Gods98::Flic_LoadHeader);
 
-	// used by: Front_Menu_UpdateOverlays, Panel_Draw, Pointer_DrawPointer, Reward_DrawItem
+	// used by: Front_Menu_UpdateOverlays, Panel_Draw, Pointer_DrawPointer
 	result &= hook_write_jmpret(0x00484330, Gods98::Flic_AnimateMainDeltaTime);
 
 	// internal, no need to hook these
@@ -928,7 +928,7 @@ bool interop_hook_Gods98_Fonts(void)
 
 	result &= hook_write_jmpret(0x0047a800, Gods98::Font_GetHeight);
 
-	// used by: Lego_Shutdown_Full, Reward_CleanupBaseFont
+	// used by: Lego_Shutdown_Full
 	result &= hook_write_jmpret(0x0047a810, Gods98::Font_Remove);
 
 	// internal, no need to hook these
@@ -2174,7 +2174,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	// used by: Front_Menu_Update, Front_Callback_SelectMissionItem
 	result &= hook_write_jmpret(0x00410250, LegoRR::Front_LevelSelect_LevelNamePrintF);
 
-	// used by: Front_Initialise, Reward_Show
+	// used by: Front_Initialise
 	result &= hook_write_jmpret(0x00410300, LegoRR::Front_Callback_TriggerPlayCredits);
 
 	// used by: Front_ScreenMenuLoop
@@ -2350,7 +2350,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	result &= hook_write_jmpret(0x00413d90, LegoRR::Front_MenuItem_ParseTypeString);
 
 	// used by: Front_LoadMenuSet, Front_LoadLevelSet, Front_LoadLevels,
-	//          Front_Callback_SelectMissionItem, Lego_Initialise, Reward_LoadItemText
+	//          Front_Callback_SelectMissionItem, Lego_Initialise
 	result &= hook_write_jmpret(0x00413e30, LegoRR::Front_Util_StringReplaceChar);
 
 	// used by: Front_Menu_CreateOverlay
@@ -2439,7 +2439,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	result &= hook_write_jmpret(0x004153e0, LegoRR::Front_LoadLevelSet);
 
 	// QoL apply for always-skippable splash screens and movies
-	// used by: Front_PlayIntroMovie, Front_PlayLevelMovie, Reward_Show
+	// used by: Front_PlayIntroMovie, Front_PlayLevelMovie
 	result &= hook_write_jmpret(0x00415630, LegoRR::Front_PlayMovie);
 	// used by: Lego_Initialise
 	result &= hook_write_jmpret(0x004156f0, LegoRR::Front_PlayIntroSplash);
@@ -2466,27 +2466,23 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	// used by: Lego_Initialise
 	result &= hook_write_jmpret(0x00416120, LegoRR::Front_Initialise);
 
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00416840, LegoRR::Front_SaveOptionParameters);
-
 	// used by: Front_PrepareScreenMenuType, Lego_Initialise, Lego_EndLevel
 	result &= hook_write_jmpret(0x00416870, LegoRR::Front_LoadOptionParameters);
 
 	// used by: Front_RunScreenMenuType
 	result &= hook_write_jmpret(0x004168f0, LegoRR::Front_PrepareScreenMenuType);
 
-	// used by: Lego_Initialise, Lego_EndLevel, Reward_GotoSaveMenu
+	// used by: Lego_Initialise, Lego_EndLevel
 	result &= hook_write_jmpret(0x00416bb0, LegoRR::Front_RunScreenMenuType);
 
-	// used by: Lego_Initialise, Lego_MainLoop, Lego_HandleKeys, Lego_EndLevel,
-	//          Reward_GotoSaveMenu
+	// used by: Lego_Initialise, Lego_MainLoop, Lego_HandleKeys, Lego_EndLevel
 	result &= hook_write_jmpret(0x00416c30, LegoRR::Front_IsFrontEndEnabled);
 
-	// used by: Front_GetSelectedLevel, Lego_EndLevel, Reward_GotoSaveMenu
+	// used by: Front_GetSelectedLevel, Lego_EndLevel
 	result &= hook_write_jmpret(0x00416c80, LegoRR::Front_IsMissionSelected);
 
 	// used by: Front_GetSelectedLevel, Front_Levels_GetTutoOrMissions, Front_Save_SetLevelCompleted,
-	//          Lego_EndLevel, Reward_GotoSaveMenu
+	//          Lego_EndLevel
 	result &= hook_write_jmpret(0x00416c90, LegoRR::Front_IsTutorialSelected);
 
 	// used by: Lego_Initialise, Lego_EndLevel
@@ -2501,10 +2497,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	// used by: Lego_MainLoop
 	//result &= hook_write_jmpret(0x00416d20, LegoRR::Front_IsTriggerMissionRestart);
 
-	// used by: Reward_GotoSaveMenu, Reward_GotoAdvance
-	result &= hook_write_jmpret(0x00416d30, LegoRR::Front_Levels_GetTutoOrMissions);
-
-	// used by: Front_LevelSet_LoadLevelLinks, Reward_GotoSaveMenu, Reward_GotoAdvance
+	// used by: Front_LevelSet_LoadLevelLinks
 	result &= hook_write_jmpret(0x00416d50, LegoRR::Front_LevelSet_IndexOf);
 
 	// used by: Front_LoadLevels, Front_LevelLink_FindByLinkIndex, Front_Levels_UpdateAvailable,
@@ -2547,7 +2540,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	result &= hook_write_jmpret(0x00417220, LegoRR::Front_Levels_UpdateAvailable_Recursive);
 
 	// used by: Front_Callback_SelectLoadSave, Front_Callback_TriggerBackSave,
-	//          Front_PrepareScreenMenuType, Front_Save_WriteEmptySaveFiles, Reward_GotoAdvance
+	//          Front_PrepareScreenMenuType, Front_Save_WriteEmptySaveFiles
 	result &= hook_write_jmpret(0x00417310, LegoRR::Front_Levels_UpdateAvailable);
 
 	// used by: Front_Save_GetLevelCompleteWithPoints, Front_Callback_SelectMissionItem
@@ -2565,7 +2558,7 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	// used by: Front_LoadLevels
 	result &= hook_write_jmpret(0x004178e0, LegoRR::MainMenuFull_AddMissionsDisplay);
 
-	// used by: Front_LoadSaveSlotImages, Front_Save_LoadAllSaveFiles, Reward_GotoAdvance
+	// used by: Front_LoadSaveSlotImages, Front_Save_LoadAllSaveFiles
 	result &= hook_write_jmpret(0x004179c0, LegoRR::Front_Save_ReadSaveFile);
 
 	// used by: Front_Save_ReadSaveFile, Front_Save_LoadAllSaveFiles, Front_Save_WriteCurrentSaveFiles,
@@ -2575,54 +2568,20 @@ bool interop_hook_LegoRR_FrontEnd(void)
 	// used by: Front_LoadLevels
 	result &= hook_write_jmpret(0x00417d20, LegoRR::Front_Save_LoadAllSaveFiles);
 
-	// used by: Front_UpdateOptionsSliders, Front_Save_GetCurrentSaveData, Reward_GotoAdvance
+	// used by: Front_UpdateOptionsSliders, Front_Save_GetCurrentSaveData
 	result &= hook_write_jmpret(0x00417d80, LegoRR::Front_Save_GetSaveDataAt);
 
-	// used by: FrontEnd, Lego_LoadLevel, Reward_GotoSaveMenu, Reward_GotoAdvance
+	// used by: FrontEnd, Lego_LoadLevel
 	result &= hook_write_jmpret(0x00417da0, LegoRR::Front_Save_GetCurrentSaveData);
 
-	// used by: Front_UpdateOptionsSliders, Front_Save_WriteEmptySaveFiles, Lego_LoadLevel,
-	//          Reward_GotoSaveMenu, Reward_GotoAdvance
+	// used by: Front_UpdateOptionsSliders, Front_Save_WriteEmptySaveFiles, Lego_LoadLevel
 	result &= hook_write_jmpret(0x00417dc0, LegoRR::Front_Save_GetSaveNumber);
 
-	// used by: Front_Callback_SelectLoadSave, Reward_GotoSaveMenu, Reward_GotoAdvance
+	// used by: Front_Callback_SelectLoadSave
 	result &= hook_write_jmpret(0x00417dd0, LegoRR::Front_Save_SetSaveNumber);
 
-	// used by: Reward_GotoSaveMenu, Reward_GotoAdvance
-	result &= hook_write_jmpret(0x00417de0, LegoRR::Front_Save_SetLevelCompleted);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417e50, LegoRR::Front_Save_SetSaveStruct18);
-
-	// used by: Reward_GotoSaveMenu, Reward_GotoAdvance
-	result &= hook_write_jmpret(0x00417e70, LegoRR::Front_Save_SetRewardLevel);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417ec0, LegoRR::Front_Save_GetRewardLevel);
-
-	// used by: Reward_GotoSaveMenu, Reward_GotoAdvance
-	result &= hook_write_jmpret(0x00417ef0, LegoRR::Front_Save_WriteCurrentSaveFiles);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417f10, LegoRR::Front_Save_GetHasNoSaveData);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417f20, LegoRR::Front_Save_SetHasNoSaveData);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417f30, LegoRR::Front_Save_WriteEmptySaveFiles);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417f70, LegoRR::Front_Save_CopySaveData);
-
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00417ff0, LegoRR::Front_Save_SetSaveData);
-
-	// used by: Front_Initialise, Front_PrepareScreenMenuType, Reward_GotoAdvance
+	// used by: Front_Initialise, Front_PrepareScreenMenuType
 	result &= hook_write_jmpret(0x00418040, LegoRR::Front_Save_SetShouldClearUnlockedLevels);
-
-	// used by: Reward_Show
-	result &= hook_write_jmpret(0x00418050, LegoRR::Front_Save_IsGame100Percented);
 
 	return_interop(result);
 }
@@ -3520,8 +3479,6 @@ bool interop_hook_LegoRR_Object(void)
 	// used by: Lego_Shutdown_Full
 	result &= hook_write_jmpret(0x00437310, LegoRR::LegoObject_Shutdown);
 
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00437370, LegoRR::Object_Save_CopyStruct18);
 	// used by: Lego_LoadLevel
 	result &= hook_write_jmpret(0x00437390, LegoRR::Object_Save_OverwriteStruct18);
 	// used by: AITask_FUN_00405880
@@ -3537,9 +3494,9 @@ bool interop_hook_LegoRR_Object(void)
 
 	// used by: LegoObject_CleanupLevel
 	result &= hook_write_jmpret(0x00437700, LegoRR::LegoObject_CleanupObjectLevels);
-	// used by: Lego_MainLoop, LegoObject_GetObjectsBuilt, NERPsRuntime_GetLevelObjectsBuilt, Reward_GetLevelObjectsBuilt
+	// used by: Lego_MainLoop, LegoObject_GetObjectsBuilt, NERPsRuntime_GetLevelObjectsBuilt
 	result &= hook_write_jmpret(0x00437720, LegoRR::LegoObject_GetLevelObjectsBuilt);
-	// used by: NERPsRuntime_GetPreviousLevelObjectsBuilt, RewardQuota_CountBuildings
+	// used by: NERPsRuntime_GetPreviousLevelObjectsBuilt
 	result &= hook_write_jmpret(0x00437760, LegoRR::LegoObject_GetPreviousLevelObjectsBuilt);
 	// used by: Level_BlockUpdateSurface
 	result &= hook_write_jmpret(0x00437790, LegoRR::LegoObject_IncLevelPathsBuilt);
@@ -3789,8 +3746,6 @@ bool interop_hook_LegoRR_Objective(void)
 	result &= hook_write_jmpret(0x004588b0, LegoRR::Objective_SetTimerObjective);
 	// used by: Objective_LoadLevel
 	result &= hook_write_jmpret(0x004588e0, LegoRR::Objective_SetConstructionObjective);
-	// used by: Reward_GotoSaveMenu
-	result &= hook_write_jmpret(0x00458910, LegoRR::Objective_IsObjectiveAchieved);
 	// used by: Lego_LoadLevel
 	result &= hook_write_jmpret(0x00458920, LegoRR::Objective_SetEndTeleportEnabled);
 	// used by: Front_Callback_TriggerReplayObjective, Lego_MainLoop, Level_ConsumeObjectOxygen,
@@ -3840,16 +3795,15 @@ bool interop_hook_LegoRR_Pointers(void)
 	// used by: Info_SetText_internal
 	result &= hook_write_jmpret(0x0045ced0, LegoRR::Pointer_GetImage);
 	// used by: Front_Menu_Update, Lego_Initialise, Lego_MainLoop, Lego_HandleRadarInput,
-	//          Lego_HandleWorld, Level_SetPointer_FromSurfaceType, LegoObject_UpdateBuildingPlacement,
-	//          Reward_LoopUpdate
+	//          Lego_HandleWorld, Level_SetPointer_FromSurfaceType, LegoObject_UpdateBuildingPlacement
 	result &= hook_write_jmpret(0x0045cee0, LegoRR::Pointer_SetCurrent_IfTimerFinished);
 	// used by: Lego_SetPointerSFX
 	result &= hook_write_jmpret(0x0045cf00, LegoRR::Pointer_SetCurrent);
 	// used by: Front_Menu_Update, Lego_HandleWorld
 	result &= hook_write_jmpret(0x0045cf20, LegoRR::Pointer_GetCurrentType);
-	// used by: Front_Menu_Update, Lego_MainLoop, Reward_LoopUpdate
+	// used by: Front_Menu_Update, Lego_MainLoop
 	result &= hook_write_jmpret(0x0045cf30, LegoRR::Pointer_DrawPointer);
-	// used by: Lego_MainLoop, Reward_LoopUpdate
+	// used by: Lego_MainLoop
 	result &= hook_write_jmpret(0x0045d050, LegoRR::Pointer_Update);
 
 	return_interop(result);
@@ -3940,25 +3894,6 @@ bool interop_hook_LegoRR_RadarMap(void)
 	result &= hook_write_jmpret(0x0045ec00, LegoRR::RadarMap_TransformRect);
 	// used by: RadarMap_Draw
 	result &= hook_write_jmpret(0x0045eca0, LegoRR::RadarMap_GetBlockColour);
-
-	return_interop(result);
-}
-
-bool interop_hook_LegoRR_Reward(void)
-{
-	bool result = true;
-
-	// used by: Reward_Show, Reward_DrawScore, Reward_DrawAllValues
-	result &= hook_write_jmpret(0x00461a50, LegoRR::Reward_DrawItem);
-
-	// used by: Reward_HandleButtons
-	result &= hook_write_jmpret(0x004622f0, LegoRR::Reward_GotoSaveMenu);
-
-	// used by: Reward_HandleButtons, Reward_LoopBegin
-	result &= hook_write_jmpret(0x00462530, LegoRR::Reward_GotoAdvance);
-
-	// used by: Reward_Show
-	result &= hook_write_jmpret(0x004629c0, LegoRR::Reward_LoopUpdate);
 
 	return_interop(result);
 }
@@ -4254,14 +4189,13 @@ bool interop_hook_LegoRR_ToolTip(void)
 	// used by: Interface_Initialise
 	result &= hook_write_jmpret(0x0046b9f0, LegoRR::ToolTip_SetRightAlign);
 	// used by: Front_Menu_Update, HelpWindow, Interface_DoSomethingWithRenameReplace, Lego,
-	//          Objective_HandleKeys, Panel_CheckButtonCollision, Priorities_HandleInput,
-	//          Reward_HandleButtons
+	//          Objective_HandleKeys, Panel_CheckButtonCollision, Priorities_HandleInput
 	result &= hook_write_jmpret(0x0046ba30, LegoRR::ToolTip_Activate);
 	// used by: Interface_DoSomethingWithRenameReplace
 	result &= hook_write_jmpret(0x0046ba60, LegoRR::ToolTip_ShowInstant);
-	// used by: Front_ScreenMenuLoop, Lego_MainLoop, Reward_LoopUpdate
+	// used by: Front_ScreenMenuLoop, Lego_MainLoop
 	result &= hook_write_jmpret(0x0046ba80, LegoRR::ToolTip_Update);
-	// used by: Reward_DrawItem, ToolTip_Draw
+	// used by: ToolTip_Draw
 	result &= hook_write_jmpret(0x0046bb70, LegoRR::ToolTip_DrawBox);
 	// used by: ToolTip_Update
 	result &= hook_write_jmpret(0x0046bef0, LegoRR::ToolTip_Draw);
@@ -4587,7 +4521,6 @@ bool interop_hook_all(void)
 	result &= interop_hook_LegoRR_Priorities();
 	result &= interop_hook_LegoRR_PTL();
 	result &= interop_hook_LegoRR_RadarMap();
-	result &= interop_hook_LegoRR_Reward();
 	result &= interop_hook_LegoRR_Roof();
 	result &= interop_hook_LegoRR_SelectPlace();
 	result &= interop_hook_LegoRR_SFX();
