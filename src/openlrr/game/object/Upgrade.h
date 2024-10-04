@@ -4,10 +4,11 @@
 #pragma once
 
 #include "../GameCommon.h"
-
+#include "Object.h"
 
 namespace LegoRR
-{; // !<---
+{
+; // !<---
 
 /**********************************************************************************
  ******** Forward Declarations
@@ -27,20 +28,20 @@ struct UpgradesModel;
  **********************************************************************************/
 
 #pragma region Constants
-
+#define UPGRADE_NUM_PARTS 200
 #pragma endregion
 
-/**********************************************************************************
- ******** Enumerations
- **********************************************************************************/
+ /**********************************************************************************
+  ******** Enumerations
+  **********************************************************************************/
 
 #pragma region Enums
 
 #pragma endregion
 
-/**********************************************************************************
- ******** Structures
- **********************************************************************************/
+  /**********************************************************************************
+   ******** Structures
+   **********************************************************************************/
 
 #pragma region Structs
 
@@ -86,61 +87,61 @@ assert_sizeof(UpgradesModel, 0x14);
 
 #pragma region Functions
 
-// Merged function: Object_Hide
-// <LegoRR.exe @00406bc0>
-#define Upgrade_Part_Hide ((void (__cdecl* )(Upgrade_PartModel* upgradePart, bool32 hide))0x00406bc0)
-//void __cdecl Upgrade_Part_Hide(Upgrade_PartModel* upgradePart, bool32 hide);
+ // Merged function: Object_Hide
+ // <LegoRR.exe @00406bc0>
+//#define Upgrade_Part_Hide ((void (__cdecl* )(Upgrade_PartModel* upgradePart, bool32 hide))0x00406bc0)
+void __cdecl Upgrade_Part_Hide(Upgrade_PartModel* upgradePart, bool32 hide);
 
 // Merged function: Object_GetActivityContainer
 // <LegoRR.exe @00406d60>
-#define Upgrade_Part_GetActivityContainer ((Gods98::Container* (__cdecl* )(Upgrade_PartModel* upgradePart))0x00406d60)
-//Gods98::Container* __cdecl Upgrade_Part_GetActivityContainer(Upgrade_PartModel* upgradePart);
+//#define Upgrade_Part_GetActivityContainer ((Gods98::Container* (__cdecl* )(Upgrade_PartModel* upgradePart))0x00406d60)
+Gods98::Container* __cdecl Upgrade_Part_GetActivityContainer(Upgrade_PartModel* upgradePart);
 
 // Not used by Upgrade_Part_*, but should be supported.
 // Merged function: Object_FindNull
 // <LegoRR.exe @00406e80>
-#define Upgrade_Part_FindNull ((Gods98::Container* (__cdecl* )(Upgrade_PartModel* upgradePart, const char* name, uint32 frameNo))0x00406e80)
-//Gods98::Container* __cdecl Upgrade_Part_FindNull(Upgrade_PartModel* upgradePart, const char* name, uint32 frameNo);
+//#define Upgrade_Part_FindNull ((Gods98::Container* (__cdecl* )(Upgrade_PartModel* upgradePart, const char* name, uint32 frameNo))0x00406e80)
+Gods98::Container* __cdecl Upgrade_Part_FindNull(Upgrade_PartModel* upgradePart, const char* name, uint32 frameNo);
 
 // Not used by Upgrade_Part_*, but should be supported.
 // Merged function: Object_SetOwnerObject
 // <LegoRR.exe @004082b0>
-#define Upgrade_Part_SetOwnerObject ((void (__cdecl* )(Upgrade_PartModel* upgradePart, LegoObject* liveObj))0x004082b0)
-//void __cdecl Upgrade_Part_SetOwnerObject(Upgrade_PartModel* upgradePart, LegoObject* liveObj);
+//#define Upgrade_Part_SetOwnerObject ((void (__cdecl* )(Upgrade_PartModel* upgradePart, LegoObject* liveObj))0x004082b0)
+void __cdecl Upgrade_Part_SetOwnerObject(Upgrade_PartModel* upgradePart, LegoObject* liveObj);
 
 // Merged function: Object_IsHidden
 // <LegoRR.exe @004085d0>
-#define Upgrade_Part_IsHidden ((bool32 (__cdecl* )(Upgrade_PartModel* upgradePart))0x004085d0)
-//bool32 __cdecl Upgrade_Part_IsHidden(Upgrade_PartModel* upgradePart);
+//#define Upgrade_Part_IsHidden ((bool32 (__cdecl* )(Upgrade_PartModel* upgradePart))0x004085d0)
+bool32 __cdecl Upgrade_Part_IsHidden(Upgrade_PartModel* upgradePart);
 
 
 // <LegoRR.exe @0046c2f0>
-#define Upgrade_Part_Load ((void (__cdecl* )(OUT Upgrade_PartModel* upgradePart, LegoObject_ID objID, Gods98::Container* root, const char* filename))0x0046c2f0)
-//void __cdecl Upgrade_Part_Load(OUT Upgrade_PartModel* upgradePart, LegoObject_ID objID, Gods98::Container* root, const char* filename);
+//#define Upgrade_Part_Load ((void (__cdecl* )(OUT Upgrade_PartModel* upgradePart, LegoObject_ID objID, Gods98::Container* root, const char* filename))0x0046c2f0)
+void __cdecl Upgrade_Part_Load(OUT Upgrade_PartModel* upgradePart, LegoObject_ID objID, Gods98::Container* root, const char* filename);
 
 // <LegoRR.exe @0046c370>
-#define Upgrade_Part_Clone ((void (__cdecl* )(IN Upgrade_PartModel* srcUpgradePart, OUT Upgrade_PartModel* destUpgradePart))0x0046c370)
-//void __cdecl Upgrade_Part_Clone(IN Upgrade_PartModel* srcUpgradePart, OUT Upgrade_PartModel* destUpgradePart);
+//#define Upgrade_Part_Clone ((void (__cdecl* )(IN Upgrade_PartModel* srcUpgradePart, OUT Upgrade_PartModel* destUpgradePart))0x0046c370)
+void __cdecl Upgrade_Part_Clone(IN Upgrade_PartModel* srcUpgradePart, OUT Upgrade_PartModel* destUpgradePart);
 
 // <LegoRR.exe @0046c3b0>
-#define Upgrade_Part_Remove ((void (__cdecl* )(Upgrade_PartModel* upgradePart))0x0046c3b0)
-//void __cdecl Upgrade_Part_Remove(Upgrade_PartModel* upgradePart);
+//#define Upgrade_Part_Remove ((void (__cdecl* )(Upgrade_PartModel* upgradePart))0x0046c3b0)
+void __cdecl Upgrade_Part_Remove(Upgrade_PartModel* upgradePart);
 
 // <LegoRR.exe @0046c3d0>
-#define Upgrade_Part_MoveAnimation ((real32 (__cdecl* )(Upgrade_PartModel* upgradePart, real32 elapsed, uint32 unused_unkFrameNo))0x0046c3d0)
-//real32 __cdecl Upgrade_Part_MoveAnimation(Upgrade_PartModel* upgradePart, real32 elapsed, uint32 unused_unkFrameNo);
+//#define Upgrade_Part_MoveAnimation ((real32 (__cdecl* )(Upgrade_PartModel* upgradePart, real32 elapsed, uint32 unused_unkFrameNo))0x0046c3d0)
+real32 __cdecl Upgrade_Part_MoveAnimation(Upgrade_PartModel* upgradePart, real32 elapsed, uint32 unused_unkFrameNo);
 
 // <LegoRR.exe @0046c3f0>
-#define Upgrade_Part_SetActivity ((bool32 (__cdecl* )(Upgrade_PartModel* upgradePart, const char* activityName))0x0046c3f0)
-//bool32 __cdecl Upgrade_Part_SetActivity(Upgrade_PartModel* upgradePart, const char* activityName);
+//#define Upgrade_Part_SetActivity ((bool32 (__cdecl* )(Upgrade_PartModel* upgradePart, const char* activityName))0x0046c3f0)
+bool32 __cdecl Upgrade_Part_SetActivity(Upgrade_PartModel* upgradePart, const char* activityName);
 
 // <LegoRR.exe @0046c420>
-#define Upgrade_Load ((void (__cdecl* )(OUT UpgradesModel* upgrades, const Gods98::Config* act, const char* gameName))0x0046c420)
-//void __cdecl Upgrade_Load(OUT UpgradesModel* upgrades, const Gods98::Config* act, const char* gameName);
+//#define Upgrade_Load ((void (__cdecl* )(OUT UpgradesModel* upgrades, const Gods98::Config* act, const char* gameName))0x0046c420)
+void __cdecl Upgrade_Load(OUT UpgradesModel* upgrades, const Gods98::Config* act, const char* gameName);
 
 // <LegoRR.exe @0046c600>
-#define Upgrade_SetUpgradeLevel ((void (__cdecl* )(UpgradesModel* upgrades, uint32 objLevel))0x0046c600)
-//void __cdecl Upgrade_SetUpgradeLevel(UpgradesModel* upgrades, uint32 objLevel);
+//#define Upgrade_SetUpgradeLevel ((void (__cdecl* )(UpgradesModel* upgrades, uint32 objLevel))0x0046c600)
+void __cdecl Upgrade_SetUpgradeLevel(UpgradesModel* upgrades, uint32 objLevel);
 
 #pragma endregion
 

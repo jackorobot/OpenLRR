@@ -3523,8 +3523,7 @@ bool interop_hook_LegoRR_Object(void)
 	result &= hook_write_jmpret(0x00437f80, LegoRR::LegoObject_CanShootObject);
 
 	// used by: Lego_HandleWorldDebugKeys, Lego_LoadLevel, Lego_LoadOLObjectList,
-	//          HiddenObject_ExposeBlock, LegoObject_CreateInWorld, LegoObject_PTL_GatherRock,
-	//          Upgrade_SetUpgradeLevel
+	//          HiddenObject_ExposeBlock, LegoObject_CreateInWorld, LegoObject_PTL_GatherRock
 	result &= hook_write_jmpret(0x00437fc0, LegoRR::LegoObject_Create);
 	// used by: LegoObject_Create
 	result &= hook_write_jmpret(0x00438580, LegoRR::LegoObject_Create_internal);
