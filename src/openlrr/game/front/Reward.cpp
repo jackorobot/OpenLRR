@@ -836,7 +836,7 @@ uint32 __cdecl LegoRR::Reward_GetLevelObjectsBuilt(const char* objName, sint32 o
 
 inline void calculatePercent(LegoRR::RewardLevelItem& item)
 {
-	if (item.countdownRatio != 0.0f)
+	if (item.countdownRatio == 0.0f)
 	{
 		item.percentFloat = 100.0f;
 	}
@@ -1795,7 +1795,7 @@ bool32 __cdecl LegoRR::Reward_LoopBegin(void)
 
 	if (rewardGlobs.display && reward->Enabled)
 	{
-		while (Input_IsKeyUp(DIK_SPACE) && !Input_IsKeyReleased(DIK_SPACE))
+		while (Input_IsKeyDown(DIK_SPACE) || Input_IsKeyPressed(DIK_SPACE))
 		{
 			Gods98::Main_LoopUpdate(TRUE);
 		}
