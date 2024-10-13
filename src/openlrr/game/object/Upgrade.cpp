@@ -104,7 +104,7 @@ void __cdecl LegoRR::Upgrade_Load(OUT UpgradesModel* upgrades, const Gods98::Con
 	{
 		char buff[256];
 		std::sprintf(buff, "Level%i%i%i%i", level >> 3 & 1, level >> 2 & 1, level >> 1 & 1, level & 1);
-		char const* keyPath = Gods98::Config_BuildStringID(gameName, "Upgrades", buff);
+		char const* keyPath = Config_ID(gameName, "Upgrades", buff);
 		Gods98::Config const* prop = Gods98::Config_FindArray(act, keyPath);
 		if (prop == nullptr)
 		{
